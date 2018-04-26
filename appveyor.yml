@@ -15,7 +15,7 @@ environment:
 
 install:
   - cinst nasm
-  - set path="%path%;C:\Program Files\NASM"
+  - set path=%path%;C:\Program Files\NASM
 
 before_build:
   - git clone git://git.openssl.org/openssl.git

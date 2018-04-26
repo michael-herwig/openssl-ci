@@ -42,7 +42,7 @@ after_build:
   - ps: C:\Temp\OpenSSL\bin\openssl.exe version | Select-String -Pattern '\d\.\d\.\d(-\w+)*' | % { $_.Matches[0].Value } | Out-File -Encoding ASCII .\version
   - set /P version=<version
 
-  - set artifact_name=OpenSSL-%version%-%Configuration%-%platform%.zip
+  - set artifact_name=OpenSSL-%version%-msvc15-%Configuration%-%platform%.zip
   - 7z a "%artifact_name%" C:\Temp\OpenSSL\*
   - appveyor PushArtifact "%artifact_name%"
 

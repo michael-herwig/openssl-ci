@@ -40,6 +40,7 @@ test_script:
   - nmake test
 
 on_finish:
+  - nmake install
   - set artifact_name=OpenSSL-%Configuration%-%platform%.zip
   - 7z a "%artifact_name%" C:\Temp\OpenSSL\*
   - appveyor PushArtifact "%artifact_name%"

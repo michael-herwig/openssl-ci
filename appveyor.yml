@@ -9,9 +9,8 @@ environment:
   matrix:
     - platform: x64
       config_target: VC-WIN64A
-    - platform: x68
+    - platform: x86
       config_target: VC-WIN32
-
 
 install:
   - cinst nasm

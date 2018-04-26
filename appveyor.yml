@@ -1,0 +1,43 @@
+image:
+  - Visual Studio 2017
+
+configuration:
+  - Debug
+  - Release
+
+environment:
+  matrix:
+    - platform: x64
+      config_target: VC-WIN64A
+    - platform: x68
+      config_target: VC-WIN32
+
+
+install:
+  - cint nasm
+
+before_build:
+  - git clone git://git.openssl.org/openssl.git
+  - cd openssl
+
+build_script:
+  # Configure Build Environment
+  - if "%platform%" == "x86" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+  - if "%platform%" == "x64" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+  # Configure Release/Debug Flag
+  - if "%configuration%" == "Debug" set build_type_flag=--debug
+  - if "%configuration%" == "Release" set build_type_flag=--release
+
+  # Project Configuration
+  - perl Configure %config_target% %build_type_flag%  --threads --prefix=C:\Temp\OpenSSL
+
+  # Build
+  - nmake
+
+test_script:
+  - nmake test
+
+artifacts:
+  - path: C:\Temp\OpenSSL
+    name: openssl

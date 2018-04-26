@@ -14,7 +14,7 @@ environment:
 
 
 install:
-  - cint nasm
+  - cinst nasm
 
 before_build:
   - git clone git://git.openssl.org/openssl.git

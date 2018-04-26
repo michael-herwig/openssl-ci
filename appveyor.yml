@@ -17,7 +17,7 @@ install:
   - set path=%path%;C:\Program Files\NASM
 
 before_build:
-  - git clone git://git.openssl.org/openssl.git
+  - git submodule update --init --recursive
   - cd openssl
 
 build_script:
@@ -35,11 +35,23 @@ build_script:
   # Build
   - nmake
 
-test_script:
-  - nmake test
-
-on_finish:
+after_build:
   - nmake install
-  - set artifact_name=OpenSSL-%Configuration%-%platform%.zip
+  
+  # Extract Version
+  - ps: C:\Temp\OpenSSL\bin\openssl.exe version | Select-String -Pattern '\d\.\d\.\d(-\w+)*' | % { $_.Matches[0].Value } | Out-File -Encoding ASCII .\version
+  - set /P version=<version
+
+  - set artifact_name=OpenSSL-%version%-%Configuration%-%platform%.zip
   - 7z a "%artifact_name%" C:\Temp\OpenSSL\*
   - appveyor PushArtifact "%artifact_name%"
+
+deploy:
+  release: $(version)
+  tag: $(version)
+  force_update: true
+  description: 'AppVeyor CD'
+  provider: GitHub
+  auth_token:
+    secure: aWupJYJFNmN8GhkiNHaV412MnmQuedA9npndju27MejT80u1ERbwRvIt4qptWyDn
+  artifact: $(artifact_name)

@@ -31,7 +31,7 @@ build_script:
   - if "%configuration%" == "Release" set build_type_flag=--release
 
   # Project Configuration
-  - perl Configure %config_target% %build_type_flag%  --threads --prefix=C:\Temp\OpenSSL
+  - perl Configure %config_target% %build_type_flag% --prefix=C:\Temp\OpenSSL
 
   # Build
   - nmake
@@ -39,6 +39,7 @@ build_script:
 test_script:
   - nmake test
 
-artifacts:
-  - path: C:\Temp\OpenSSL
-    name: openssl
+on_finish:
+  - set artifact_name=OpenSSL-%Configuration%-%platform%.zip
+  - 7z a "%artifact_name%" C:\Temp\OpenSSL\*
+  - appveyor PushArtifact "%artifact_name%"
